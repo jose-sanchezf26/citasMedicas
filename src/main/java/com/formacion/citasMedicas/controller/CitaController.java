@@ -37,7 +37,6 @@ public class CitaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(citaResponseDTO);
     }
 
-    // Respuesta a PUT
     @PutMapping("/{id}")
     public ResponseEntity<CitaResponseDTO> actualizarCita(@PathVariable Long id,
                                                                   @Valid @RequestBody CitaRequestDTO citaDTO){
@@ -46,7 +45,6 @@ public class CitaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Respuesta a DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarCita(@PathVariable Long id){
         boolean eliminado = service.eliminarCita(id);

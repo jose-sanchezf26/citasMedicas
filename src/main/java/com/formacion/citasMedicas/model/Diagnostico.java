@@ -14,4 +14,8 @@ public class Diagnostico {
 
     private String valoracionEspecialista;
     private String enfermedad;
+
+    @OneToOne
+    @JoinColumn(name = "citaId", referencedColumnName = "id")
+    private Cita cita;
 }

@@ -16,6 +16,8 @@ public interface CitaMapper {
     @Mapping(target = "nombreMedico", expression = "java(cita.getMedico().getNombre() + ' ' + cita.getMedico().getApellidos())")
     @Mapping(target = "pacienteId", expression = "java(cita.getPaciente().getId())")
     @Mapping(target = "medicoId", expression = "java(cita.getMedico().getId())")
+    @Mapping(source = "diagnostico.enfermedad", target = "diagnosticoEnfermedad")
     CitaResponseDTO toResponse(Cita cita);
+    @Mapping(target = "diagnostico", ignore = true)
     void updateCitaFromDTO(CitaRequestDTO citaDTO, @MappingTarget Cita cita);
 }

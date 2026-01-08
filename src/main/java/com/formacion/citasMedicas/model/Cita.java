@@ -27,4 +27,7 @@ public class Cita {
     @JoinColumn(name = "medicoId", nullable = false)
     private Medico medico;
 
+    // Relación con Diagnóstico
+    @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL)
+    private Diagnostico diagnostico;
 }

@@ -18,5 +18,6 @@ public class CitaResponseDTO {
     private String nombrePaciente;
     private Long medicoId;
     private String nombreMedico;
+    private String diagnosticoEnfermedad;
 
 }
