@@ -2,12 +2,9 @@ package com.formacion.citasMedicas.controller;
 
 import com.formacion.citasMedicas.dto.PacienteRequestDTO;
 import com.formacion.citasMedicas.dto.PacienteResponseDTO;
-import com.formacion.citasMedicas.mapper.PacienteMapper;
-import com.formacion.citasMedicas.model.Paciente;
 import com.formacion.citasMedicas.service.PacienteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
