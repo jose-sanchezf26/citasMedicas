@@ -7,27 +7,29 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "citas")
+@Table(name = "CITAS")
 public class Cita {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ID")
     private Long id;
-
+    @Column(name = "FECHA_HORA")
     private LocalDateTime fechaHora;
+    @Column(name = "MOTIVO_CITA")
     private String motivoCita;
 
     // Relación con Paciente
     @ManyToOne
-    @JoinColumn(name = "pacienteId", nullable = false)
+    @JoinColumn(name = "PACIENTE_ID", nullable = false)
     private Paciente paciente;
 
     // Relación con Medico
     @ManyToOne
-    @JoinColumn(name = "medicoId", nullable = false)
+    @JoinColumn(name = "MEDICO_ID", nullable = false)
     private Medico medico;
 
     // Relación con Diagnóstico
-    @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
     private Diagnostico diagnostico;
 }

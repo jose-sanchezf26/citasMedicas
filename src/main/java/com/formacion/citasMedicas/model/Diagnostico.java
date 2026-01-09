@@ -5,17 +5,19 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "diagnosticos")
+@Table(name = "DIAGNOSTICOS")
 public class Diagnostico {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ID")
     private Long id;
-
+    @Column(name = "VALORACION_ESPECIALISTA")
     private String valoracionEspecialista;
+    @Column(name = "ENFERMEDAD")
     private String enfermedad;
 
     @OneToOne
-    @JoinColumn(name = "citaId", referencedColumnName = "id")
+    @JoinColumn(name = "CITAID", referencedColumnName = "ID")
     private Cita cita;
 }
