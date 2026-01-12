@@ -22,5 +22,5 @@ public class Medico extends Usuario{
 
     // Relación uno a mucho con Cita
     @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL)
-    private List<Cita> citas;
+    private Set<Cita> citas;
 }

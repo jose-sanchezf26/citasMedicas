@@ -2,6 +2,7 @@ package com.formacion.citasMedicas.service;
 
 import com.formacion.citasMedicas.dto.PacienteRequestDTO;
 import com.formacion.citasMedicas.dto.PacienteResponseDTO;
+import com.formacion.citasMedicas.exception.domain.NotFoundException;
 import com.formacion.citasMedicas.mapper.PacienteMapper;
 import com.formacion.citasMedicas.model.Paciente;
 import com.formacion.citasMedicas.repository.PacienteRepository;
@@ -12,12 +13,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PacienteServiceImpl {
+public class PacienteServiceImpl implements PacienteService {
 
     private final PacienteRepository repository;
     private final PacienteMapper mapper;
 
     // Obtener todos los pacientes
+    @Override
     public List<PacienteResponseDTO> listarPacientes(){
         return repository.findAll().stream()
                 .map(mapper::toResponse)
@@ -25,12 +27,14 @@ public class PacienteServiceImpl {
     }
 
     // Obtener un paciente por ID
-    public Optional<PacienteResponseDTO> obtenerPaciente(Long id){
-        return repository.findById(id)
-                .map(mapper::toResponse);
+    @Override
+    public PacienteResponseDTO obtenerPaciente(Long id){
+        Paciente paciente = comprobarPaciente(id);
+        return mapper.toResponse(paciente);
     }
 
     // Guardar un paciente
+    @Override
     public PacienteResponseDTO crearPaciente(PacienteRequestDTO pacienteDTO) {
         // Convierte el DTO en entidad
         Paciente paciente = mapper.toEntity(pacienteDTO);
@@ -41,21 +45,25 @@ public class PacienteServiceImpl {
     }
 
     // Actualizar un paciente
-    public Optional<PacienteResponseDTO> actualizarPaciente(Long id, PacienteRequestDTO pacienteDTO){
-        return repository.findById(id)
-                .map(paciente -> {
-                    mapper.updatePacienteFromDTO(pacienteDTO, paciente);
-                    Paciente guardado = repository.save(paciente);
-                    return mapper.toResponse(guardado);
-                });
+    @Override
+    public PacienteResponseDTO actualizarPaciente(Long id, PacienteRequestDTO pacienteDTO){
+        Paciente paciente = comprobarPaciente(id);
+
+        mapper.updatePacienteFromDTO(pacienteDTO, paciente);
+
+        return mapper.toResponse(repository.save(paciente));
     }
 
     // Eliminar un paciente
-    public boolean eliminarPaciente(Long id){
-        if(repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    @Override
+    public void eliminarPaciente(Long id){
+        comprobarPaciente(id);
+        repository.deleteById(id);
+    }
+
+    @Override
+    public Paciente comprobarPaciente(Long id){
+        return repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Paciente con id " + id + " no existe."));
     }
 }

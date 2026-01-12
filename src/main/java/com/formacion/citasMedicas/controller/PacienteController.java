@@ -4,59 +4,48 @@ import com.formacion.citasMedicas.dto.PacienteRequestDTO;
 import com.formacion.citasMedicas.dto.PacienteResponseDTO;
 import com.formacion.citasMedicas.service.PacienteService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/pacientes")
 public class PacienteController {
 
     private final PacienteService service;
 
-    public PacienteController(PacienteService service){
-        this.service = service;
-    }
-
     // Respuesta a la solicitud GET
     @GetMapping
-    public ResponseEntity<List<PacienteResponseDTO>> listarPacientes(){
-        List<PacienteResponseDTO> pacientes = service.listarPacientes();
-        return ResponseEntity.ok(pacientes);
+    public List<PacienteResponseDTO> listarPacientes(){
+        return service.listarPacientes();
     }
 
     // Respuesta a la solicitud GET con un id
     @GetMapping("/{id}")
-    public ResponseEntity<PacienteResponseDTO> obtenerPaciente(@PathVariable Long id){
-        return service.obtenerPaciente(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public PacienteResponseDTO obtenerPaciente(@PathVariable Long id){
+        return service.obtenerPaciente(id);
     }
 
     // Respuesta a la solicitud POST
     @PostMapping
-    public ResponseEntity<PacienteResponseDTO> crearPaciente(@Valid @RequestBody PacienteRequestDTO pacienteRequestDTO){
-        // Obtiene el DTO de respuesta del servicio
-        PacienteResponseDTO pacienteResponseDTO = service.crearPaciente(pacienteRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(pacienteResponseDTO);
+    @ResponseStatus(HttpStatus.CREATED)
+    public PacienteResponseDTO crearPaciente(@Valid @RequestBody PacienteRequestDTO pacienteRequestDTO){
+        return service.crearPaciente(pacienteRequestDTO);
     }
 
     // Respuesta a PUT
     @PutMapping("/{id}")
-    public ResponseEntity<PacienteResponseDTO> actualizarPaciente(@PathVariable Long id,
+    public PacienteResponseDTO actualizarPaciente(@PathVariable Long id,
                                                        @Valid @RequestBody PacienteRequestDTO pacienteDTO){
-        return service.actualizarPaciente(id, pacienteDTO)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return service.actualizarPaciente(id, pacienteDTO);
     }
 
     // Respuesta a DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarPaciente(@PathVariable Long id){
-        boolean eliminado = service.eliminarPaciente(id);
-        if (eliminado)
-            return ResponseEntity.noContent().build();
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminarPaciente(@PathVariable Long id){
+        service.eliminarPaciente(id);
     }
 }

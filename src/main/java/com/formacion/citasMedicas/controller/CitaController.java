@@ -6,7 +6,6 @@ import com.formacion.citasMedicas.service.CitaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,37 +18,30 @@ public class CitaController {
     private final CitaService service;
 
     @GetMapping
-    public ResponseEntity<List<CitaResponseDTO>> listarCitas(){
-        return ResponseEntity.ok(service.listarCitas());
+    public List<CitaResponseDTO> listarCitas(){
+        return service.listarCitas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CitaResponseDTO> obtenerCita(@PathVariable Long id){
-        return service.obtenerCita(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public CitaResponseDTO obtenerCita(@PathVariable Long id){
+        return service.obtenerCita(id);
     }
 
     @PostMapping
-    public ResponseEntity<CitaResponseDTO> crearCita(@Valid @RequestBody CitaRequestDTO citaRequestDTO){
-        CitaResponseDTO citaResponseDTO = service.crearCita(citaRequestDTO);
-        if (citaResponseDTO == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(citaResponseDTO);
+    @ResponseStatus(HttpStatus.CREATED)
+    public CitaResponseDTO crearCita(@Valid @RequestBody CitaRequestDTO citaRequestDTO){
+        return service.crearCita(citaRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CitaResponseDTO> actualizarCita(@PathVariable Long id,
+    public CitaResponseDTO actualizarCita(@PathVariable Long id,
                                                                   @Valid @RequestBody CitaRequestDTO citaDTO){
-        return service.actualizarCita(id, citaDTO)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return service.actualizarCita(id, citaDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCita(@PathVariable Long id){
-        boolean eliminado = service.eliminarCita(id);
-        if (eliminado)
-            return ResponseEntity.noContent().build();
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminarCita(@PathVariable Long id){
+        service.eliminarCita(id);
     }
 }

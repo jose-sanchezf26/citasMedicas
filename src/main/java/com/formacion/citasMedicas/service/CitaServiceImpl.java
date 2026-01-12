@@ -2,6 +2,7 @@ package com.formacion.citasMedicas.service;
 
 import com.formacion.citasMedicas.dto.CitaRequestDTO;
 import com.formacion.citasMedicas.dto.CitaResponseDTO;
+import com.formacion.citasMedicas.exception.domain.NotFoundException;
 import com.formacion.citasMedicas.mapper.CitaMapper;
 import com.formacion.citasMedicas.model.Cita;
 import com.formacion.citasMedicas.model.Medico;
@@ -17,32 +18,33 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CitaServiceImpl {
+public class CitaServiceImpl  implements CitaService{
 
     private final CitaRepository citaRepository;
-    private final PacienteRepository pacienteRepository;
-    private final MedicoRepository medicoRepository;
+    private final PacienteService pacienteService;
+    private final MedicoService medicoService;
     private final CitaMapper mapper;
 
+    @Override
     public List<CitaResponseDTO> listarCitas(){
         return citaRepository.findAll().stream()
                 .map(mapper::toResponse)
                 .toList();
     }
 
-    public Optional<CitaResponseDTO> obtenerCita(Long id){
-        return citaRepository.findById(id)
-                .map(mapper::toResponse);
+    @Override
+    public CitaResponseDTO obtenerCita(Long id){
+        Cita cita = comprobarCita(id);
+        return mapper.toResponse(cita);
     }
 
+    @Override
     public CitaResponseDTO crearCita(CitaRequestDTO citaDTO){
         Cita cita = mapper.toEntity(citaDTO);
 
         // Validación de la entidad, se busca que existan el paciente y el médico
-        Paciente paciente = comprobarPaciente(citaDTO.getPacienteId());
-        Medico medico = comprobarMedico(citaDTO.getMedicoId());
-
-        if (medico == null || paciente == null) return null;
+        Paciente paciente = pacienteService.comprobarPaciente(citaDTO.getPacienteId());
+        Medico medico = medicoService.comprobarMedico(citaDTO.getMedicoId());
 
         cita.setPaciente(paciente);
         cita.setMedico(medico);
@@ -50,32 +52,30 @@ public class CitaServiceImpl {
         return mapper.toResponse(citaRepository.save(cita));
     }
 
-    public Optional<CitaResponseDTO> actualizarCita(Long id, CitaRequestDTO citaDTO){
+    @Override
+    public CitaResponseDTO actualizarCita(Long id, CitaRequestDTO citaDTO){
+        Cita cita = comprobarCita(id);
+
+        // Validación de la entidad, se busca que existan el paciente y el médico
+        Paciente paciente = pacienteService.comprobarPaciente(citaDTO.getPacienteId());
+        Medico medico = medicoService.comprobarMedico(citaDTO.getMedicoId());
+
+        mapper.updateCitaFromDTO(citaDTO, cita);
+        cita.setPaciente(paciente);
+        cita.setMedico(medico);
+
+        return mapper.toResponse(citaRepository.save(cita));
+    }
+
+    @Override
+    public void eliminarCita(Long id){
+        Cita cita = comprobarCita(id);
+        citaRepository.delete(cita);
+    }
+
+    @Override
+    public Cita comprobarCita(Long id){
         return citaRepository.findById(id)
-                .map(cita -> {
-                    mapper.updateCitaFromDTO(citaDTO, cita);
-                    Paciente paciente = comprobarPaciente(citaDTO.getPacienteId());
-                    Medico medico = comprobarMedico(citaDTO.getMedicoId());
-                    if (medico == null || paciente == null) return null;
-                    cita.setPaciente(paciente);
-                    cita.setMedico(medico);
-                    return mapper.toResponse(citaRepository.save(cita));
-                });
-    }
-
-    public boolean eliminarCita(Long id){
-        if(citaRepository.existsById(id)){
-            citaRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    private Paciente comprobarPaciente(Long pacienteId){
-        return pacienteRepository.findById(pacienteId).orElse(null);
-    }
-
-    private Medico comprobarMedico(Long medicoId){
-        return medicoRepository.findById(medicoId).orElse(null);
+                .orElseThrow(() -> new NotFoundException("Cita con id " + id + " no existe."));
     }
 }

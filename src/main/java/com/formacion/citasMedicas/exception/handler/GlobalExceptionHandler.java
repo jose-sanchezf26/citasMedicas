@@ -1,8 +1,7 @@
 package com.formacion.citasMedicas.exception.handler;
 
-import com.formacion.citasMedicas.exception.domain.CitaConDiagnosticoYaExisteException;
-import com.formacion.citasMedicas.exception.domain.CitaNoExisteException;
-import com.formacion.citasMedicas.exception.domain.DiagnosticoNoExisteException;
+import com.formacion.citasMedicas.exception.domain.BadRequestException;
+import com.formacion.citasMedicas.exception.domain.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,21 +12,15 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CitaNoExisteException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleCitaNoExiste(CitaNoExisteException ex){
+    public Map<String, String> handleNotFound(NotFoundException ex){
         return Map.of("error", ex.getMessage());
     }
 
-    @ExceptionHandler(CitaConDiagnosticoYaExisteException.class)
+    @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleCitaConDiagostico(CitaConDiagnosticoYaExisteException ex){
-        return Map.of("error", ex.getMessage());
-    }
-
-    @ExceptionHandler(DiagnosticoNoExisteException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleDiagnosticoNoExiste(DiagnosticoNoExisteException ex){
+    public Map<String, String> handleBadRequest(BadRequestException ex){
         return Map.of("error", ex.getMessage());
     }
 }

@@ -3,56 +3,46 @@ package com.formacion.citasMedicas.controller;
 import com.formacion.citasMedicas.dto.MedicoRequestDTO;
 import com.formacion.citasMedicas.dto.MedicoResponseDTO;
 import com.formacion.citasMedicas.service.MedicoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/medicos")
 public class MedicoController {
 
     private final MedicoService service;
 
-    public MedicoController(MedicoService service){
-        this.service = service;
-    }
-
     @GetMapping
-    public ResponseEntity<List<MedicoResponseDTO>> listarMedicos(){
-        List<MedicoResponseDTO> medicos = service.listarMedicos();
-        return ResponseEntity.ok(medicos);
+    public List<MedicoResponseDTO> listarMedicos(){
+        return service.listarMedicos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicoResponseDTO> obtenerMedico(@PathVariable Long id){
-        return service.obtenerMedico(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public MedicoResponseDTO obtenerMedico(@PathVariable Long id){
+        return service.obtenerMedico(id);
     }
 
     @PostMapping
-    public ResponseEntity<MedicoResponseDTO> crearMedico(@Valid @RequestBody MedicoRequestDTO medicoDTO){
-        MedicoResponseDTO medico = service.crearMedico(medicoDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(medico);
+    @ResponseStatus(HttpStatus.CREATED)
+    public MedicoResponseDTO crearMedico(@Valid @RequestBody MedicoRequestDTO medicoDTO){
+        return service.crearMedico(medicoDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MedicoResponseDTO> actualizarMedico(@PathVariable Long id,
+    public MedicoResponseDTO actualizarMedico(@PathVariable Long id,
                                                               @Valid @RequestBody MedicoRequestDTO medicoDTO){
-        return service.actualizarMedico(id, medicoDTO)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return service.actualizarMedico(id, medicoDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarMedico(@PathVariable Long id){
-        boolean eliminado = service.eliminarMedico(id);
-        if (eliminado)
-            return ResponseEntity.noContent().build();
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminarMedico(@PathVariable Long id){
+        service.eliminarMedico(id);
     }
 
 }
