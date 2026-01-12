@@ -12,9 +12,9 @@ public interface DiagnosticoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "cita", ignore = true)
     Diagnostico toEntity(DiagnosticoRequestDTO diagnosticoDTO);
-    @Mapping(source = "cita.id", target = "citaId")
+
     DiagnosticoResponseDTO toResponse(Diagnostico diagnostico);
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "cita", ignore = true)
-    Diagnostico updateDiagnosticoFromDTO(DiagnosticoRequestDTO diagnosticoDTO, @MappingTarget Diagnostico diagnostico);
+    void updateDiagnosticoFromDTO(DiagnosticoRequestDTO diagnosticoDTO, @MappingTarget Diagnostico diagnostico);
 }

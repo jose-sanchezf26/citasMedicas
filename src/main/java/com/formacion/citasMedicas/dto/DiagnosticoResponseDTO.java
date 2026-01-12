@@ -14,6 +14,5 @@ public class DiagnosticoResponseDTO {
     private Long id;
     private String valoracionEspecialista;
     private String enfermedad;
-    private Long citaId;
 
 }

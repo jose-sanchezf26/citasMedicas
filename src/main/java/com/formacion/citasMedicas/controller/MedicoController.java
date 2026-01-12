@@ -2,6 +2,7 @@ package com.formacion.citasMedicas.controller;
 
 import com.formacion.citasMedicas.dto.MedicoRequestDTO;
 import com.formacion.citasMedicas.dto.MedicoResponseDTO;
+import com.formacion.citasMedicas.dto.MedicoResumenDTO;
 import com.formacion.citasMedicas.service.MedicoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class MedicoController {
     private final MedicoService service;
 
     @GetMapping
-    public List<MedicoResponseDTO> listarMedicos(){
+    public List<MedicoResumenDTO> listarMedicos(){
         return service.listarMedicos();
     }
 

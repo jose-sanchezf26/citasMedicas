@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,5 +35,7 @@ public class PacienteRequestDTO {
 
     @NotBlank(message = "La dirección es obligatoria")
     private String direccion;
+
+    private List<Long> medicosIds;
 
 }

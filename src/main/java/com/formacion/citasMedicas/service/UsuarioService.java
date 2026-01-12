@@ -13,4 +13,6 @@ public interface UsuarioService {
     UsuarioResponseDTO actualizarUsuario(Long id, UsuarioRequestDTO usuarioDTO);
     void eliminarUsuario(Long id);
     Usuario comprobarUsuario(Long id);
+    void existeNombreUsuario(String nombreUsuario);
+    void existeNombreUsuarioConID(Long id, String nombreUsuario);
 }

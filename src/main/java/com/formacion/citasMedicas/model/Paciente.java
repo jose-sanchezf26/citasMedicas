@@ -3,12 +3,14 @@ package com.formacion.citasMedicas.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Set;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @Entity
 @Table(name = "PACIENTES")
 public class Paciente extends Usuario{
@@ -27,10 +29,10 @@ public class Paciente extends Usuario{
     @JoinTable( name = "PACIENTE_MEDICO",
                 joinColumns = @JoinColumn(name = "PACIENTE_ID"),
                 inverseJoinColumns = @JoinColumn(name = "MEDICO_ID"))
-    private Set<Medico> medicos;
+    private List<Medico> medicos;
 
     // Relación uno a mucho con cita
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
-    private Set<Cita> citas;
+    private List<Cita> citas;
 
 }

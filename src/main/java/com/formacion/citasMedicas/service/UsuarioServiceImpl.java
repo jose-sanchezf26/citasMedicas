@@ -36,9 +36,7 @@ public class UsuarioServiceImpl implements UsuarioService{
     public UsuarioResponseDTO crearUsuario(UsuarioRequestDTO usuarioDTO) {
         Usuario usuario = mapper.toEntity(usuarioDTO);
 
-        String nombreUsuario = usuario.getUsuario();
-        if(repository.existsByUsuario(nombreUsuario))
-            throw new BadRequestException("El nombre de usuario " + nombreUsuario + " ya existe");
+        existeNombreUsuario(usuario.getUsuario());
 
         return mapper.toResponse(repository.save(usuario));
     }
@@ -47,9 +45,7 @@ public class UsuarioServiceImpl implements UsuarioService{
     public UsuarioResponseDTO actualizarUsuario(Long id, UsuarioRequestDTO usuarioDTO) {
         Usuario usuario = comprobarUsuario(id);
 
-        String nombreUsuario = usuario.getUsuario();
-        if(repository.existsByUsuarioAndIdNot(id, nombreUsuario))
-            throw new BadRequestException("El nombre de usuario " + nombreUsuario + " ya existe");
+        existeNombreUsuarioConID(id, usuario.getUsuario());
 
         mapper.updateUsuarioFromDTO(usuarioDTO, usuario);
 
@@ -66,5 +62,17 @@ public class UsuarioServiceImpl implements UsuarioService{
     public Usuario comprobarUsuario(Long id){
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario con id " + id + " no existe."));
+    }
+
+    @Override
+    public void existeNombreUsuario(String nombreUsuario){
+        if(repository.existsByUsuario(nombreUsuario))
+            throw new BadRequestException("El nombre de usuario " + nombreUsuario + " ya existe");
+    }
+
+    @Override
+    public void existeNombreUsuarioConID(Long id, String nombreUsuario){
+        if(repository.existsByUsuarioAndIdNot(id, nombreUsuario))
+            throw new BadRequestException("El nombre de usuario " + nombreUsuario + " ya existe");
     }
 }

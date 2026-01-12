@@ -9,13 +9,9 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CitaResponseDTO {
-
+public class CitaPacienteDTO {
     private Long id;
     private LocalDateTime fechaHora;
     private String motivoCita;
-    private PacienteResumenDTO paciente;
     private MedicoResumenDTO medico;
-    private DiagnosticoResponseDTO diagnostico;
-
 }

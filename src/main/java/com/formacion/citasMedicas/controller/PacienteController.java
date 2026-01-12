@@ -2,6 +2,7 @@ package com.formacion.citasMedicas.controller;
 
 import com.formacion.citasMedicas.dto.PacienteRequestDTO;
 import com.formacion.citasMedicas.dto.PacienteResponseDTO;
+import com.formacion.citasMedicas.dto.PacienteResumenDTO;
 import com.formacion.citasMedicas.service.PacienteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class PacienteController {
 
     // Respuesta a la solicitud GET
     @GetMapping
-    public List<PacienteResponseDTO> listarPacientes(){
+    public List<PacienteResumenDTO> listarPacientes(){
         return service.listarPacientes();
     }
 

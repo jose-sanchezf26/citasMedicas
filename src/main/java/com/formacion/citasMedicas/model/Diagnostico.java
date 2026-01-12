@@ -2,8 +2,11 @@ package com.formacion.citasMedicas.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "DIAGNOSTICOS")
 public class Diagnostico {

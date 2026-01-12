@@ -1,21 +1,18 @@
 package com.formacion.citasMedicas.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicoResponseDTO {
+public class MedicoResumenDTO {
 
     private Long id;
     private String nombre;
     private String apellidos;
     private String usuario;
     private String numColegiado;
-    private List<PacienteResumenDTO> pacientes;
-    private List<CitaMedicoDTO> citas;
 
 }

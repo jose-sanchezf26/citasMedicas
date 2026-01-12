@@ -1,7 +1,10 @@
 package com.formacion.citasMedicas.dto;
+import com.formacion.citasMedicas.service.MedicoService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,5 +19,7 @@ public class PacienteResponseDTO {
     private String numTarjeta;
     private String telefono;
     private String direccion;
+    private List<MedicoResumenDTO> medicos;
+    private List<CitaPacienteDTO> citas;
 
 }
